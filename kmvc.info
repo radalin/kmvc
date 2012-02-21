@@ -1,0 +1,6 @@
+name = Kartaca MVC Module
+description = A module made for developers to mimic a micro MVC framework based on Drupal's goodies
+
+core = 7.x
+
+package = "kmvc"
