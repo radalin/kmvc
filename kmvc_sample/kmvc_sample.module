@@ -1,0 +1,22 @@
+<?php
+
+//Include the Bootstrapper...
+require_once("app/Bootstrap.php");
+
+/**
+ * The Bootstrap function for the module...
+ *
+ * @return void
+ */
+function kmvc_sample_init() {
+    \Ks\Bootstrap::bootstrap();
+}
+
+/**
+ * Initialize menu module which will create the default dispatcher hook
+ *
+ * @return array
+ */
+function kmvc_sample_menu() {
+    return \Ks\Bootstrap::initMenuHook();
+}

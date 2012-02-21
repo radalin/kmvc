@@ -81,7 +81,10 @@ class Dispatcher
         }, $_dispatch);
         $_moduleName = "";
         $_controllerName = $_dispatch[1];
-        $_actionName = $_dispatch[2];
+        $_actionName = "index";
+        if (isset($_dispatch[2]) && null !== $_dispatch[2]) {
+            $_actionName = $_dispatch[2];
+        }
         if (preg_match("/_/", $_controllerName)) {
             list($_moduleName, $_controllerName) = preg_split("/_/", $_controllerName, 2);
         }
@@ -120,8 +123,14 @@ class Dispatcher
         if (isset($_options["module"]) && !empty($_options["module"])) {
             $_filePath .= "/" . $_options["module"];
         }
-        $_filePath .= "/views/" . $_options["controller"] . "/" . $_options["action"] . ".phtml";
-        $_controller = new $_controllerName($_filePath);
+        $_filePath .= "/views/%s/%s.phtml";
+        $_params = array(
+            "filePath" => $_filePath,
+            "module" => $_options["module"],
+            "controller" => $_options["controller"],
+            "action" => $_options["action"],
+        );
+        $_controller = new $_controllerName($_params);
         $_controller->$_actionName();
         if ($_controller->getView()->getRenderType() === RenderType::NONE) {
             return null;

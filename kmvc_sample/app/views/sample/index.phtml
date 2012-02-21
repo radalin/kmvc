@@ -1,0 +1,4 @@
+<?php
+$node_view = node_view($node, "full");
+$node_view["comments"] = comment_node_page_additions($node);
+echo drupal_render($node_view);

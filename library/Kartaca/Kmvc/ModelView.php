@@ -18,7 +18,14 @@ class ModelView
      *
      * @var string
      **/
-    protected $_viewFile;
+    private $_viewFile;
+    
+    /**
+     * Template where the view is located
+     *
+     * @var string
+     */
+    private $_viewTemplate;
     
     /**
      * Arguments to pass to the view layer
@@ -32,12 +39,19 @@ class ModelView
      *
      * @param string $view view name relative to the views folder.
      */
-    public function __construct($path, RenderType $renderType = null)
+    public function __construct($params, RenderType $renderType = null)
     {
         if (null === $renderType) {
             $this->_renderType = RenderType::FULL;
         }
-        $this->_viewFile = $path;
+        $this->_viewFile = $params["filePath"];
+        $this->_viewTemplate = $params["controller"] . "/" . $params["action"];
+    }
+    
+    public function setTemplate($template)
+    {
+        $this->_viewTemplate = $template;
+        return $this;
     }
     
     /**
@@ -128,7 +142,9 @@ class ModelView
                 $$key = $val;
             }
             ob_start();
-            require($this->_viewFile);
+            list($_controller, $_action) = explode("/", $this->_viewTemplate);
+            $_file = sprintf($this->_viewFile, $_controller, $_action);
+            require($_file);
             $_content = ob_get_clean();
         }
         if ($_rt === RenderType::PARTIAL) {

@@ -1,0 +1,8 @@
+name = KMVC Sample App
+description = A sample module that uses KMVC's goodies
+
+core = 7.x
+
+package = "kmvc"
+
+dependencies[] = kmvc

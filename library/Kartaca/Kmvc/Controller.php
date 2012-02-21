@@ -14,12 +14,19 @@ class Controller
     protected $_view;
     
     /**
+     * A StdClass containing query params
+     *
+     * @var StdClass
+     */
+    protected $_params = null;
+    
+    /**
      * Constructor
      *
      */
-    public function __construct($viewFile)
+    public function __construct($params)
     {
-        $this->_view = new ModelView($viewFile);
+        $this->_view = new ModelView($params);
     }
     
     /**
@@ -30,6 +37,23 @@ class Controller
     public function willRender()
     {
         return $_view->willRender();
+    }
+    
+    /**
+     * Returns parameter StdClass
+     *
+     * @return StdClass
+     * @author roy simkes
+     **/
+    public function getParams()
+    {
+        if (null === $this->_params) {
+            $this->_params = new \StdClass();
+            foreach ($_REQUEST as $_key => $_val) {
+                $this->_params->$_key = $_val;
+            }
+        }
+        return $this->_params;
     }
     
     /**
