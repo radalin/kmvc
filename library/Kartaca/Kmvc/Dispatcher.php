@@ -4,6 +4,10 @@ namespace Kartaca\Kmvc;
 
 use Kartaca\Kmvc\ModelView\RenderType as RenderType;
 
+/**
+ * Dispatcher that finds the correct route, creates the controllers and actions
+ *  calls the action and prints the ModelView.
+ */
 class Dispatcher
 {
     /**
@@ -71,6 +75,7 @@ class Dispatcher
      *
      * @param string $route URL where the page is called
      * @param string $defaultNamespace default namespace for the project
+     * @param array $returnOptions associative array containing module, controller and action names
      * @return array
      */
     public static function getControllerAndAction($route, $defaultNamespace, $returnOptions = false)
@@ -114,7 +119,7 @@ class Dispatcher
      *
      * @param string $route URL that we are looking for something like music_index/index or index/index
      * @param string $options Options for the app
-     * @return string
+     * @return mixed rendered HTML if the content will be wrapped by the layout, null if layout is will not be wrapped
      */
     public static function dispatch($route, $options = null)
     {
@@ -148,6 +153,5 @@ class Dispatcher
             return null;
         }
         return $_content;
-        
     }
 }

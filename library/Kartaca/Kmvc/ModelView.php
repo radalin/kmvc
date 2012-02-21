@@ -4,6 +4,10 @@ namespace Kartaca\Kmvc;
 
 use \Kartaca\Kmvc\ModelView\RenderType as RenderType;
 
+/**
+ * View class that handles, the arguments and template files.
+ *
+ */
 class ModelView
 {
     /**
@@ -48,6 +52,13 @@ class ModelView
         $this->_viewTemplate = $params["controller"] . "/" . $params["action"];
     }
     
+    /**
+     * Sets the template. You can set the template based on controller and action.
+     *   It should be sent as controller/action. Another format might break this up.
+     *
+     * @param string $template template should be given as controller/action format
+     * @return ModelView
+     */
     public function setTemplate($template)
     {
         $this->_viewTemplate = $template;

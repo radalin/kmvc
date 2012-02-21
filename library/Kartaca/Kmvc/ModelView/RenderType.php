@@ -2,6 +2,10 @@
 
 namespace Kartaca\Kmvc\ModelView;
 
+/**
+ * This is actually an Enum class
+ * There are currently 5 options.
+ */
 class RenderType
 {
     /**

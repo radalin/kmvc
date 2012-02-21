@@ -2,10 +2,13 @@
 
 namespace Kartaca\Kmvc;
 
+/**
+ * Base Controller class for the controllers.
+ *
+ * TODO: Create an interface for this to allow different modules to implement their own Controller implementation
+ */
 class Controller
 {
-    protected $_renderView = true;
-    
     /**
      * View Object
      *
@@ -22,7 +25,9 @@ class Controller
     
     /**
      * Constructor
+     * TODO: Document parameters
      *
+     * @param array $params
      */
     public function __construct($params)
     {
@@ -43,8 +48,7 @@ class Controller
      * Returns parameter StdClass
      *
      * @return StdClass
-     * @author roy simkes
-     **/
+     */
     public function getParams()
     {
         if (null === $this->_params) {

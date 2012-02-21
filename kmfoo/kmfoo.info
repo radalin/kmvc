@@ -1,0 +1,8 @@
+name = KmFoo Another Sample App
+description = Another sample app for the kmvc module. This one is less structured, responds only to ajax calls.
+
+core = 7.x
+
+package = "kmvc"
+
+dependencies[] = kmvc

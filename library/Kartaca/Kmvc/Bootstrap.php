@@ -4,8 +4,21 @@ namespace Kartaca\Kmvc;
 
 //TODO: Perhaps I should name this as app? I don't know it yet...
 class Bootstrap
-{        
+{       
+    /**
+     * Options for the bootstrapper.
+     * Currently there is no need for this, but what if I change this as an App?
+     *
+     * @var string
+     */ 
     private $_options = array();
+    
+    /**
+     * Contains information if it's definitions are done once or not...
+     * @var boolean
+     */
+    private static $_definedOnce = false;
+    
     /**
      * Bootstraps the Gnc Application.
      *
@@ -14,9 +27,12 @@ class Bootstrap
     public function bootstrap($options = null)
     {
         $this->_options = $options;
-        $this->_initConstants();
-        $this->_initIncludePath();
-        $this->_initAutoloader();
+        if (!self::$_definedOnce) {
+            $this->_initConstants();
+            $this->_initIncludePath();
+            $this->_initAutoloader();
+            self::$_definedOnce = true;
+        }
         if (null !== $options) {
             $_dispatcher = new Dispatcher($options["appPath"], $options["defaultNamespace"]);
             $this->_initRouter($options["appName"], $_dispatcher);
@@ -27,7 +43,6 @@ class Bootstrap
      * Autoloader for library classes and controllers
      *
      * @return void
-     * @author roy simkes
      */
     protected function _initAutoloader()
     {
@@ -71,7 +86,6 @@ class Bootstrap
      * Initializes the include path
      *
      * @return void
-     * @author roy simkes
      */
     protected function _initIncludePath()
     {

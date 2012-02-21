@@ -18,6 +18,7 @@ class Bootstrap
     
     /**
      * Initializes constants on the app..
+     * You don't need to initialize these, but well it can be good.
      *
      * @return void
      */
@@ -27,6 +28,12 @@ class Bootstrap
         define("KS_NAMESPACE", "Ks");
     }
     
+    /**
+     * Defining APP_PATH is important for the autoloading to work well enough.
+     *
+     * @return void
+     * @author roy simkes
+     */
     protected static function _initIncludePath()
     {
         set_include_path(implode(PATH_SEPARATOR, array(
@@ -39,6 +46,7 @@ class Bootstrap
     
     /**
      * Menu Hook initializer for Drupal...
+     * Again you don't have to, but it might be better to move them here...
      *
      * @return void
      * @author roy simkes

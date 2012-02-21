@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * The Bootstrap function for the module...
+ *
+ * @return void
+ */
+function kmfoo_init() {
+    set_include_path(implode(PATH_SEPARATOR, array(
+            realpath(dirname(__FILE__)),
+            get_include_path(),
+        )
+    ));
+    $_bootstrapper = new \Kartaca\Kmvc\Bootstrap();
+    $_bootstrapper->bootstrap(array(
+        "appPath" => realpath(dirname(__FILE__) . "/app"),
+        "defaultNamespace" => "Kmfoo",
+        "appName" => "foo",
+    ));
+}
+
