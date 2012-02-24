@@ -10,6 +10,8 @@ use Kartaca\Kmvc\ModelView\RenderType as RenderType;
  */
 class Dispatcher
 {
+    protected static $_appPrefixes = array();
+    
     /**
      * Application path where the Controller directory exists.
      *
@@ -25,15 +27,35 @@ class Dispatcher
     protected $_defaultNamespace;
     
     /**
+     * Prefix for the urls.
+     *
+     * @var string
+     **/
+    protected $_appPrefix;
+    
+    /**
      * Constructor
      *
      * @param string $appPath Application Path
      * @param string $defaultNamespace default namespace for the project, it's \ by default
      */
-    public function __construct($appPath, $defaultNamespace = "\\")
+    public function __construct($options)
     {
-        $this->_appPath = $appPath;
-        $this->_defaultNamespace = $defaultNamespace;
+        if (isset($options["appPath"])) {
+            $this->_appPath = $options["appPath"];
+        } else {
+            throw new \Exception("App Path should be defined!");
+        }
+        if (isset($options["defaultNamespace"])) {
+            $this->_defaultNamespace = $options["defaultNamespace"];
+        } else {
+            throw new \Exception("Default Namespace should be defined!");
+        }
+        $this->_appPrefix = "";
+        if (isset($options["appPrefix"]) && !empty($options["appPrefix"])) {
+            $this->_appPrefix = $options["appPrefix"];
+            self::$_appPrefixes[] = $this->_appPrefix;
+        }
     }
     
     /**
@@ -61,6 +83,7 @@ class Dispatcher
      *  Returns true or false based on the existence of the route
      *
      * @param string $route URL where the page is called.
+     * @param string $appPrefix Application prefix URL
      * @return boolean true if both controller and action exists
      */
     public function routeExists($route)
@@ -84,6 +107,9 @@ class Dispatcher
         $_dispatch = array_map(function($_item) {
             return strtolower($_item);
         }, $_dispatch);
+        if (in_array($_dispatch[1], self::$_appPrefixes)) {
+            $_dispatch = array_slice($_dispatch, 1);
+        }
         $_moduleName = "";
         $_controllerName = $_dispatch[1];
         $_actionName = "index";

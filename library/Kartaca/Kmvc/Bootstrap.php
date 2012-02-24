@@ -26,7 +26,14 @@ class Bootstrap
      */
     public function bootstrap($options = null)
     {
-        $this->_options = $options;
+        $this->_options = array_merge(
+            array(
+                "appPrefix" => "",
+                //TODO: There is a problem with defaultNamespace...
+                "defaultNamespace" => "\\",
+            ),
+            $options
+        );
         if (!self::$_definedOnce) {
             $this->_initConstants();
             $this->_initIncludePath();
@@ -34,8 +41,8 @@ class Bootstrap
             self::$_definedOnce = true;
         }
         if (null !== $options) {
-            $_dispatcher = new Dispatcher($options["appPath"], $options["defaultNamespace"]);
-            $this->_initRouter($options["appName"], $_dispatcher);
+            $_dispatcher = new Dispatcher($this->_options);
+            $this->_initRouter($this->_options["appName"], $this->_options["appPrefix"], $_dispatcher);
         }
     }
     
@@ -105,7 +112,7 @@ class Bootstrap
      * TODO: Document the _escaped_fragment_ logic here...
      * @return void
      */
-    protected function _initRouter($appName, $dispatcher)
+    protected function _initRouter($appName, $appPrefix, $dispatcher)
     {
         if (isset($_REQUEST["_escaped_fragment_"])) {
             $_fragment = $_REQUEST["_escaped_fragment_"];
