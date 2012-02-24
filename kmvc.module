@@ -1,7 +1,7 @@
 <?php
 
 //Include the Bootstrapper...
-require_once("library/Kartaca//Kmvc/Bootstrap.php");
+require_once("library/Kartaca/Kmvc/App.php");
 
 /**
  * The Bootstrap function for the module...
@@ -17,5 +17,5 @@ function kmvc_init() {
  * @return array
  */
 function kmvc_menu() {
-    return \Kartaca\Kmvc\Bootstrap::initMenuHook();
+    return \Kartaca\Kmvc\App::getInstance()->initMenuHook();
 }

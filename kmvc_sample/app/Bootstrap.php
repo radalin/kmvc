@@ -3,13 +3,17 @@
 namespace Ks;
 
 class Bootstrap
-{   
+{
+    /**
+     * Bootstrap the current module
+     *
+     * @return void
+     */
     public static function bootstrap()
     {
         self::_initConstants();
         self::_initIncludePath();
-        $_bootstrapper = new \Kartaca\Kmvc\Bootstrap();
-        $_bootstrapper->bootstrap(array(
+        \Kartaca\Kmvc\App::getInstance()->addApp(array(
             "appPath" => KS_APP_PATH,
             "defaultNamespace" => KS_NAMESPACE,
             "appName" => "kmvc-sample",

@@ -9,7 +9,6 @@ use \Kartaca\Kmvc\Controller as Controller;
  *  Try drupal/modularity_index/ or drupal/modularity_index/index to view this module...
  *
  * @package default
- * @author roy simkes
  */
 class IndexController extends Controller
 {

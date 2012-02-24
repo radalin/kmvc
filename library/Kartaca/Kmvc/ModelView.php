@@ -16,28 +16,28 @@ class ModelView
      * @var RenderType
      */
     protected $_renderType;
-    
+
     /**
      * Location of the views...
      *
      * @var string
      **/
     private $_viewFile;
-    
+
     /**
      * Template where the view is located
      *
      * @var string
      */
     private $_viewTemplate;
-    
+
     /**
      * Arguments to pass to the view layer
      *
      * @var array
      **/
     protected $_args = array();
-    
+
     /**
      * Constructor
      *
@@ -51,7 +51,7 @@ class ModelView
         $this->_viewFile = $params["filePath"];
         $this->_viewTemplate = $params["controller"] . "/" . $params["action"];
     }
-    
+
     /**
      * Sets the template. You can set the template based on controller and action.
      *   It should be sent as controller/action. Another format might break this up.
@@ -64,7 +64,7 @@ class ModelView
         $this->_viewTemplate = $template;
         return $this;
     }
-    
+
     /**
      * Sets the render type
      *
@@ -76,7 +76,7 @@ class ModelView
         $this->_renderType = $rt;
         return $this;
     }
-    
+
     /**
      * Retuns the render type
      *
@@ -86,7 +86,7 @@ class ModelView
     {
         return $this->_renderType;
     }
-    
+
     /**
      * Sets the render type to None
      *
@@ -97,7 +97,7 @@ class ModelView
         $this->_renderType = RenderType::NONE;
         return $this;
     }
-    
+
     /**
      * Sets the render type to None
      *
@@ -108,7 +108,7 @@ class ModelView
         $this->_renderType = RenderType::PARTIAL;
         return $this;
     }
-    
+
     /**
      * Adds an element to the arguments...
      *

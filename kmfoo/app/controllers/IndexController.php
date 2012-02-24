@@ -1,6 +1,7 @@
 <?php
 
-namespace Kmfoo;
+//Unsilence the line below, to enable namespaces for this module...
+//namespace Kmfoo;
 
 use \Kartaca\Kmvc\Controller as Controller;
 use \Kartaca\Kmvc\ModelView\RenderType as RenderType;

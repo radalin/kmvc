@@ -2,48 +2,70 @@
 
 namespace Kartaca\Kmvc;
 
-//TODO: Perhaps I should name this as app? I don't know it yet...
-class Bootstrap
+class App
 {       
-    /**
-     * Options for the bootstrapper.
-     * Currently there is no need for this, but what if I change this as an App?
-     *
-     * @var string
-     */ 
-    private $_options = array();
-    
     /**
      * Contains information if it's definitions are done once or not...
      * @var boolean
      */
-    private static $_definedOnce = false;
+    private static $_instance = null;
     
     /**
-     * Bootstraps the Gnc Application.
+     * Private Constructor to prevent initialization
+     *
+     * @author roy simkes
+     */
+    private function __construct()
+    {
+        $this->bootstrap();
+    }
+    
+    /**
+     * GetInstance method for the singleton pattern
      *
      * @return void
      */
-    public function bootstrap($options = null)
+    public static function getInstance()
     {
-        $this->_options = array_merge(
+        if (null === self::$_instance) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+    
+    /**
+     * Adds another app to the kmvc module...
+     *
+     * @param array $options options for the current app...
+     * @return App
+     */
+    public function addApp($options = null)
+    {
+        if (!isset($options["appName"]) || empty($options["appName"])) {
+            throw new \Exception("A unique name should be defined");
+        }
+        $options = array_merge(
             array(
                 "appPrefix" => "",
-                //TODO: There is a problem with defaultNamespace...
-                "defaultNamespace" => "\\",
+                "defaultNamespace" => "",
             ),
             $options
         );
-        if (!self::$_definedOnce) {
-            $this->_initConstants();
-            $this->_initIncludePath();
-            $this->_initAutoloader();
-            self::$_definedOnce = true;
-        }
-        if (null !== $options) {
-            $_dispatcher = new Dispatcher($this->_options);
-            $this->_initRouter($this->_options["appName"], $this->_options["appPrefix"], $_dispatcher);
-        }
+        $_dispatcher = new Dispatcher($options);
+        $this->_initRouter($_dispatcher, $options);
+        return $this;
+    }
+    
+    /**
+     * Bootstraps the Kmvc Application.
+     *
+     * @return void
+     */
+    protected function bootstrap($options = null)
+    {
+        $this->_initConstants();
+        $this->_initIncludePath();
+        $this->_initAutoloader();
     }
     
     /**
@@ -66,13 +88,15 @@ class Bootstrap
                 if (stream_resolve_include_path($_filePath) !== false) {
                     require_once("$_filePath");
                 }
-                $_filePath = lcfirst($_splitted[$_splitCount - 2])
-                    . "/controllers/"
-                    . $_splitted[$_splitCount - 1]
-                    . ".php";
-                
-                if (stream_resolve_include_path($_filePath) !== false) {
-                    require_once($_filePath);
+                //If no namespace or module defined, don't check here...
+                if ($_splitCount > 1) {
+                    $_filePath = lcfirst($_splitted[$_splitCount - 2])
+                        . "/controllers/"
+                        . $_splitted[$_splitCount - 1]
+                        . ".php";
+                    if (stream_resolve_include_path($_filePath) !== false) {
+                        require_once($_filePath);
+                    }
                 }
             }
         });
@@ -108,11 +132,10 @@ class Bootstrap
      *  This creates a last hook for the requests before 404 errors.
      *  It dynamically creates a route if the application can dispatch to the url.
      *
-     * TODO: AppName should be used for multiple modules to use the same kmvc module...
      * TODO: Document the _escaped_fragment_ logic here...
      * @return void
      */
-    protected function _initRouter($appName, $appPrefix, $dispatcher)
+    protected function _initRouter($dispatcher, $options)
     {
         if (isset($_REQUEST["_escaped_fragment_"])) {
             $_fragment = $_REQUEST["_escaped_fragment_"];
@@ -147,7 +170,7 @@ class Bootstrap
             }
             if ($dispatcher->routeExists($loc)) {
                 $menu_item = menu_get_item('krtc/dispatcher');
-                $menu_item['page_arguments'] = array($loc, $this->_options);
+                $menu_item['page_arguments'] = array($loc, $options);
                 menu_set_item(preg_replace("/\//", "", $loc, 1), $menu_item);
             }
         }
@@ -158,7 +181,7 @@ class Bootstrap
      *
      * @return void
      */
-    public static function initMenuHook()
+    public function initMenuHook()
     {
         $_items['krtc/dispatcher'] = array(
            'title' => 'kmvc',

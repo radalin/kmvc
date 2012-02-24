@@ -13,12 +13,27 @@ function kmfoo_init() {
             get_include_path(),
         )
     ));
-    $_bootstrapper = new \Kartaca\Kmvc\Bootstrap();
-    $_bootstrapper->bootstrap(array(
-        "appPath" => KMFOO_APP_PATH,
-        "appName" => "foo",
-        "defaultNamespace" =>"Kmfoo",
-        "appPrefix" => "kmfoo",
+    \Kartaca\Kmvc\App::getInstance()->addApp(
+        array(
+            /**
+             * Application path for the module. It contains the controllers and views etc.
+             */
+            "appPath" => KMFOO_APP_PATH,
+            /**
+             * Application name for the module. it should be unique for each app. Module name is recommended
+             */
+            "appName" => "kmfoo",
+            /**
+             * There is no namespace defined for this module,
+             *  if you do please unsilence the line below
+             *  and the namespace definitions in the IndexController...
+             */ 
+            //"defaultNamespace" =>"Kmfoo",
+            /**
+             * Application prefix where it will be used for the urls.
+             *  In order to call the IndexController of this module you have to use: drupal-root/kmfoo/index/index 
+             */
+            "appPrefix" => "kmfoo",
     ));
 }
 

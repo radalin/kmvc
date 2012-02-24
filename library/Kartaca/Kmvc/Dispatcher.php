@@ -10,34 +10,32 @@ use Kartaca\Kmvc\ModelView\RenderType as RenderType;
  */
 class Dispatcher
 {
+    /**
+     * A static value containing multiple apps prefix paths..
+     *
+     * TODO: I don't really think this is the right place to keep it. But I will think of it later...
+     * @author roy simkes
+     */
     protected static $_appPrefixes = array();
-    
+
     /**
      * Application path where the Controller directory exists.
      *
      * @var string
      */
     protected $_appPath;
-    
+
     /**
-     * Default Namespace if nothing given it's \ by default that is none
+     * Default Namespace if nothing given it's none by default
      *
      * @var string
      */
     protected $_defaultNamespace;
-    
-    /**
-     * Prefix for the urls.
-     *
-     * @var string
-     **/
-    protected $_appPrefix;
-    
+
     /**
      * Constructor
      *
-     * @param string $appPath Application Path
-     * @param string $defaultNamespace default namespace for the project, it's \ by default
+     * @param array $options Options for the dispatcher...
      */
     public function __construct($options)
     {
@@ -57,27 +55,7 @@ class Dispatcher
             self::$_appPrefixes[] = $this->_appPrefix;
         }
     }
-    
-    /**
-     * Returns application path
-     *
-     * @return string
-     */
-    public function getAppPath()
-    {
-        return $this->_appPath;
-    }
-    
-    /**
-     * Returns the defaultnamespace
-     *
-     * @return string
-     */
-    public function getDefaultNamespace()
-    {
-        return $this->_defaultNamespace;
-    }
-    
+
     /**
      * Checks if a given route exists or not...
      *  Returns true or false based on the existence of the route
@@ -91,7 +69,7 @@ class Dispatcher
         list($_controllerName, $_actionName) = $this->getControllerAndAction($route, $this->_defaultNamespace);
         return class_exists($_controllerName) && method_exists($_controllerName, $_actionName);
     }
-    
+
     /**
      * Returns controller and action as an array.
      *  First being the controller class name and second being the action method name
@@ -138,7 +116,7 @@ class Dispatcher
         }
         return array("", "");
     }
-    
+
     /**
      * Dispatches the request to the Controller's Action!
      *  Currently it just returns
