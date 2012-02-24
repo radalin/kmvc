@@ -8,17 +8,26 @@ define("KMFOO_APP_PATH", realpath(dirname(__FILE__) . "/app"));
  * @return void
  */
 function kmfoo_init() {
+    /*
+    //This is automatically done by the addApp() You can override it...
     set_include_path(implode(PATH_SEPARATOR, array(
             KMFOO_APP_PATH,
             get_include_path(),
         )
     ));
+    */
     \Kartaca\Kmvc\App::getInstance()->addApp(
         array(
             /**
              * Application path for the module. It contains the controllers and views etc.
+             * If you don't define it, App will try to find it out based on the call stack...
              */
-            "appPath" => KMFOO_APP_PATH,
+            //"appPath" => KMFOO_APP_PATH,
+            /**
+             * it's true by default. If you enable the above set_include_path function,
+             *  you can send this one false
+             */
+            //"setIncludePath" => false,
             /**
              * Application name for the module. it should be unique for each app. Module name is recommended
              */

@@ -9,7 +9,7 @@ class App
      * @var boolean
      */
     private static $_instance = null;
-    
+
     /**
      * Private Constructor to prevent initialization
      *
@@ -19,7 +19,7 @@ class App
     {
         $this->bootstrap();
     }
-    
+
     /**
      * GetInstance method for the singleton pattern
      *
@@ -32,7 +32,7 @@ class App
         }
         return self::$_instance;
     }
-    
+
     /**
      * Adds another app to the kmvc module...
      *
@@ -48,14 +48,26 @@ class App
             array(
                 "appPrefix" => "",
                 "defaultNamespace" => "",
+                "appPath" => "",
+                "setIncludePath" => true,
             ),
             $options
         );
+        if (empty($options["appPath"])) {
+            $options["appPath"] = $this->_findAppPath();
+        }
+        if ($options["setIncludePath"]) {
+            set_include_path(implode(PATH_SEPARATOR, array(
+                    get_include_path(),
+                    $options["appPath"]
+                )
+            ));
+        }
         $_dispatcher = new Dispatcher($options);
         $this->_initRouter($_dispatcher, $options);
         return $this;
     }
-    
+
     /**
      * Bootstraps the Kmvc Application.
      *
@@ -67,7 +79,7 @@ class App
         $this->_initIncludePath();
         $this->_initAutoloader();
     }
-    
+
     /**
      * Autoloader for library classes and controllers
      *
@@ -101,7 +113,7 @@ class App
             }
         });
     }
-    
+
     /**
      * Initializes constants on the app..
      *
@@ -112,7 +124,7 @@ class App
         define("KMVC_MODULE_PATH", realpath(dirname(__FILE__) . '/../../..'));
         define("KMVC_NAMESPACE", "Kartaca\Kmvc");
     }
-    
+
     /**
      * Initializes the include path
      *
@@ -125,6 +137,32 @@ class App
                 KMVC_MODULE_PATH . "/library",
             )
         ));
+    }
+
+    /**
+     * Initializes the app include path, using debug_backtrace...
+     *
+     * TODO: This was not a very clean solution, I'm sure it will work pretty well,
+     *  but again,... debug_backtrace...
+     *
+     * @throws Exception if no app path is found.
+     * @return void
+     **/
+    protected function _findAppPath()
+    {
+        $_callStack = debug_backtrace();
+        for ($_i = 0, $_counter = count($_callStack); $_i < $_counter; $_i++) {
+            if (isset($_callStack[$_i]["file"])) {
+                //if the file name ends with .module then we found the folder path...
+                if (1 >= preg_match("/\.module$/", $_callStack[$_i]["file"])) {
+                    $_appPath = realpath(dirname($_callStack[$_i]["file"]) . "/app");
+                    if (false !== $_appPath) {
+                        return $_appPath;
+                    }
+                }
+            }
+        }
+        throw new \Exception("App Path cannot be found. Please specify it during initialization.");
     }
     
     /**
